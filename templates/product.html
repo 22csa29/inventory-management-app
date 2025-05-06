@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Products</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .flash-message {
+      background-color: #f44336;
+      color: white;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 4px;
+    }
+
+    .navbar {
+      margin-bottom: 20px;
+    }
+
+    .nav-button {
+      padding: 10px 15px;
+      background-color: #333;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      margin-right: 10px;
+    }
+
+    .nav-button:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <a href="/products" class="nav-button">Products</a>
+    <a href="/locations" class="nav-button">Locations</a>
+    <a href="/movements" class="nav-button">Movements</a>
+  </div>
+
+  <h1>Product Management</h1>
+
+  {% for message in get_flashed_messages() %}
+    <div class="flash-message">{{ message }}</div>
+  {% endfor %}
+
+  <form action="/add_product" method="POST">
+    <input name="product_id"   type="number" placeholder="ID" required>
+    <input name="product_name" type="text"   placeholder="Name" required>
+    <input name="product_quantity" type="number" placeholder="Quantity" required>
+    <button type="submit">Add</button>
+  </form>
+
+  <table>
+    <tr><th>ID</th><th>Name</th><th>Qty</th><th>Actions</th></tr>
+    {% for p in products %}
+    <tr>
+      <form action="/update_product/{{p[0]}}" method="POST">
+        <td>{{p[0]}}</td>
+        <td><input name="product_name" value="{{p[1]}}"></td>
+        <td><input name="product_quantity" value="{{p[2]}}"></td>
+        <td><button type="submit">Update</button></form>
+            <form action="/delete_product/{{p[0]}}" method="POST" style="display:inline">
+              <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+  </table>
+</body>
+</html>

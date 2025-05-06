@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Product Movements</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="navbar">
+    <a href="/products" class="nav-button">Products</a>
+    <a href="/locations" class="nav-button">Locations</a>
+    <a href="/movements" class="nav-button">Movements</a>
+    <a href="/report" class="nav-button">Report</a>
+  </div>
+
+  <h1>Movement Management</h1>
+  <form action="/add_movement" method="POST">
+    <input name="movement_id" type="number" placeholder="Movement ID" required>
+
+    <!-- auto‑filled timestamp: -->
+    <input id="timestamp" name="timestamp" type="datetime-local" required>
+
+    <select name="from_location" required>
+      <option value="">From…</option>
+      {% for loc in locations %}
+        <option value="{{ loc[0] }}">{{ loc[1] }}</option>
+      {% endfor %}
+    </select>
+
+    <select name="to_location" required>
+      <option value="">To…</option>
+      {% for loc in locations %}
+        <option value="{{ loc[0] }}">{{ loc[1] }}</option>
+      {% endfor %}
+    </select>
+
+    <select name="product_id" required>
+      <option value="">Product…</option>
+      {% for prod in products %}
+        <option value="{{ prod[0] }}">{{ prod[1] }}</option>
+      {% endfor %}
+    </select>
+
+    <input name="qty" type="number" placeholder="Qty" required>
+    <button type="submit">Add</button>
+  </form>
+
+  <table>
+    <tr>
+      <th>ID</th><th>Time</th><th>From</th><th>To</th><th>Prod</th><th>Qty</th><th>Actions</th>
+    </tr>
+    {% for m in movements %}
+    <tr>
+      <form action="/update_movement/{{ m[0] }}" method="POST">
+        <td>{{ m[0] }}</td>
+        <td><input name="timestamp" value="{{ m[1] }}" type="datetime-local" required></td>
+        <td>
+          <select name="from_location">
+            <option value="{{ m[2] }}">{{ m[2] }}</option>
+            {% for loc in locations %}
+              <option value="{{ loc[0] }}">{{ loc[1] }}</option>
+            {% endfor %}
+          </select>
+        </td>
+        <td>
+          <select name="to_location">
+            <option value="{{ m[3] }}">{{ m[3] }}</option>
+            {% for loc in locations %}
+              <option value="{{ loc[0] }}">{{ loc[1] }}</option>
+            {% endfor %}
+          </select>
+        </td>
+        <td>
+          <select name="product_id">
+            <option value="{{ m[4] }}">{{ m[4] }}</option>
+            {% for prod in products %}
+              <option value="{{ prod[0] }}">{{ prod[1] }}</option>
+            {% endfor %}
+          </select>
+        </td>
+        <td><input name="qty" value="{{ m[5] }}" type="number" required></td>
+        <td>
+          <button type="submit">Update</button>
+      </form>
+      <form action="/delete_movement/{{ m[0] }}" method="POST" style="display:inline">
+        <button type="submit">Delete</button>
+      </form>
+        </td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <!-- Place this at the very end of <body> so it runs after the input exists -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const now = new Date();
+      // Format to "YYYY-MM-DDTHH:MM" which datetime-local expects
+      const formatted = now.toISOString().slice(0,16);
+      document.getElementById("timestamp").value = formatted;
+    });
+  </script>
+</body>
+</html>
