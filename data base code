@@ -1,0 +1,25 @@
+CREATE DATABASE IF NOT EXISTS Inventory;
+USE Inventory;
+DROP TABLE IF EXISTS ProductMovement;
+DROP TABLE IF EXISTS Product;
+DROP TABLE IF EXISTS Location;
+CREATE TABLE Product (
+    product_id INT PRIMARY KEY,
+    product_name VARCHAR(100) NOT NULL,
+    product_quantity INT NOT NULL
+);
+CREATE TABLE Location (
+    location_id INT PRIMARY KEY,
+    location_name VARCHAR(100) NOT NULL
+);
+CREATE TABLE ProductMovement (
+    movement_id INT PRIMARY KEY AUTO_INCREMENT,
+    timestamp DATETIME NOT NULL,
+    from_location INT,
+    to_location INT,
+    product_id INT NOT NULL,
+    qty INT NOT NULL,
+    FOREIGN KEY (from_location) REFERENCES Location(location_id),
+    FOREIGN KEY (to_location) REFERENCES Location(location_id),
+    FOREIGN KEY (product_id) REFERENCES Product(product_id)
+);
