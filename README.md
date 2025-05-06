@@ -1,3 +1,7 @@
+
+
+https://github.com/user-attachments/assets/58c557b3-fd62-41a5-ba48-adbf0290794a
+
 Flask Inventory Management App
 
 This is a Flask-based web application for managing inventory in multiple warehouses. It allows you to:
